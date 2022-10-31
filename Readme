@@ -1,0 +1,27 @@
+Buid a CRUD rest API with typescript + Express.js Sequelize + Sqlite3
+
+improve performance by using express-validator
+
+[ ] set up typescript for dev
+[ ] basic express server with typescript
+[ ] setup database 
+[ ] create model
+[ ] create todo
+[ ] read todo with pagaination 
+[ ] raed todo with id
+[ ] update todo with id
+delete todo
+
+
+1 npm init -y
+
+2 yarn add -D typescript ts-node-dev
+create scripts in package.josn { "scripts":"ts-node-dev --respawn src/server.ts"}
+
+3 npx tsc -init
+in package.json create { "build": "tsc",
+    "start": "node dist/src/server.js"} then do yarn  build
+    "compile":"tsc -w"
+
+     yarn add -D npm install --save @types/express
+     yarn add -D @types/uuid 
