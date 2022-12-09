@@ -7,17 +7,21 @@ const express_1 = __importDefault(require("express"));
 const database_config_1 = __importDefault(require("./config/database.config"));
 const cors_1 = __importDefault(require("cors"));
 const router_1 = __importDefault(require("./route/router"));
+const dotenv_1 = __importDefault(require("dotenv"));
+// import "./config/"
+dotenv_1.default.config();
 database_config_1.default.sync().then(() => {
-    console.log("Connect to Database");
+    console.log("Connected to Database");
 });
+// if (!config.get("jwtPrivateKey")) {
+//   console.error("FATA ERROR :jwtPrivateKey is not defined.");
+//   process.exit(1);
+// }
 const app = (0, express_1.default)();
-const port = 9000;
+const port = 9001;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use("/", router_1.default);
 app.listen(port, () => {
     console.log(`Server is ON on Port ${port}`);
 });
-// function force(force: any, arg1: boolean) {
-//   throw new Error("Function not implemented.");
-// }

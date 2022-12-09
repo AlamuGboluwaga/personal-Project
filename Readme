@@ -25,3 +25,19 @@ in package.json create { "build": "tsc",
 
      yarn add -D npm install --save @types/express
      yarn add -D @types/uuid 
+     loadash (npm install --save @types/lodash.chunk or yarn add @types/lodash.chunk)
+    import _ from "lodash";
+    export = chunk; 
+    how to use _.pick(user,['name','email','lastmane'])
+
+    Joi  complexity
+    # yarn add joi-password-complexity not need it has been replaced by bcrypt
+    npm i bcrypt @types/bcrypt
+   yarn add @types/bcrypt
+   npm i jsonwebtoken @types/jsonwebt
+    yarn add config @types/config
+   npm install --save @types/config
+node
+Welcome to Node.js v16.16.0.
+Type ".help" for more information.
+> require('crypto').randomBytes(64).toString('hex')

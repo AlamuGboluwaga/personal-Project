@@ -15,13 +15,39 @@ TodoInstance.init({
         primaryKey: true,
         allowNull: false,
     },
-    title: {
+    username: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
+    firstname: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
-    completed: {
-        type: sequelize_1.DataTypes.BOOLEAN,
-        defaultValue: false,
+    middlename: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+    },
+    lastname: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+    },
+    email: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
+    phonenumber: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+    },
+    password: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+    },
+    confirmpassword: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
     },
 }, {
     sequelize: database_config_1.default,

@@ -1,26 +1,68 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.updateUser = exports.getOne = exports.getAll = exports.createUser = void 0;
 const userSchema_1 = require("./../model/userSchema");
 const uuid_1 = require("uuid");
-const validator_1 = require("../validator/validator");
+const joiValidator_1 = require("../utils/joiValidator");
+const lodash_1 = __importDefault(require("lodash"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const createUser = async (req, res, next) => {
     try {
-        const validate = validator_1.authSchema.validate(req.body, validator_1.Option);
+        const validate = joiValidator_1.authSchema.validate(req.body, joiValidator_1.Option);
         if (validate.error)
             return res.status(404).json({ Error: validate.error.details[0].message });
         const id = (0, uuid_1.v4)();
-        const recordExists = await userSchema_1.TodoInstance.findOne({
-            where: { title: req.body.title },
+        const userNameExists = await userSchema_1.TodoInstance.findOne({
+            where: {
+                username: req.body.username,
+            },
         });
-        if (recordExists) {
-            return res.status(406).json({ message: "User Already Exists" });
+        if (userNameExists) {
+            return res.status(406).json({ Error: "User Name Already Exists" });
         }
-        const User = await userSchema_1.TodoInstance.create({ ...req.body, id });
-        return res.status(200).json({ message: "User Successfully Created" });
+        const userEmailExists = await userSchema_1.TodoInstance.findOne({
+            where: { email: req.body.email },
+        });
+        if (userEmailExists) {
+            return res.status(409).json({
+                Errormsg: "This email is not availbale. Kindly choose another email",
+            });
+        }
+        const userPhoneNumberExist = await userSchema_1.TodoInstance.findOne({
+            where: { phonenumber: req.body.phonenumber },
+        });
+        if (userPhoneNumberExist) {
+            return res.status(402).json({ Error: "Phone number already Exists" });
+        }
+        const hashedPassword = await bcryptjs_1.default.hash(req.body.password, 10);
+        const User = await userSchema_1.TodoInstance.create({
+            id: id,
+            username: req.body.username,
+            firstname: req.body.firstname,
+            middlename: req.body.firstname,
+            lastname: req.body.lastname,
+            email: req.body.email,
+            phonenumber: req.body.phonenumber,
+            password: hashedPassword,
+            confirmpassword: hashedPassword,
+        });
+        return res
+            .status(201)
+            .send(lodash_1.default.pick(User, [
+            "id",
+            "username",
+            "firstname",
+            "middlename",
+            "lastname",
+            "email",
+            "phonenumber",
+        ]));
     }
     catch (error) {
-        return res.status(406).json({ message: "Title not Found" });
+        return res.status(406).json({ Error: "Title not Found" });
     }
 };
 exports.createUser = createUser;
@@ -30,7 +72,7 @@ const getAll = async (req, res) => {
         return res.send(Users);
     }
     catch (error) {
-        return res.status(404).json({ message: "No User Found" });
+        return res.status(404).json({ Error: "No User Found" });
     }
 };
 exports.getAll = getAll;
@@ -39,28 +81,28 @@ const getOne = async (req, res) => {
         const { id } = req.params;
         const Users = await userSchema_1.TodoInstance.findOne({ where: { id: id } });
         if (!Users) {
-            return res.status(404).json({ message: "User not Found" });
+            return res.status(404).json({ Error: "User not Found" });
         }
         return res.send(Users);
     }
     catch (error) {
-        return res.status(404).json({ message: "No User Found" });
+        return res.status(404).json({ Error: "No User Found" });
     }
 };
 exports.getOne = getOne;
 const updateUser = async (req, res) => {
     try {
-        const validate = validator_1.authSchema.validate(req.body, validator_1.Option);
+        const validate = joiValidator_1.authSchema.validate(req.body, joiValidator_1.Option);
         if (validate.error) {
             return res.status(404).json({ Error: validate.error.details[0].message });
         }
         const { id } = req.params;
-        const title = req.body;
+        // const title = req.body;
         const Users = await userSchema_1.TodoInstance.findOne({ where: { id: id } });
         if (!Users) {
             return res.status(404).json({ message: "User not Found" });
         }
-        const updatedUser = await Users?.update(title);
+        const updatedUser = await Users?.update(req.body);
         return res.status(200).json({ message: "User Successful Updated" });
     }
     catch (error) {
